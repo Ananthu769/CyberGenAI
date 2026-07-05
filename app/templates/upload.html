@@ -1,0 +1,24 @@
+<div class="card upload-card mt-5">
+
+    <h3>Upload Security Log</h3>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+
+        <input
+            type="file"
+            name="logfile"
+            class="form-control mt-3"
+            accept=".log,.txt,.csv"
+            required>
+
+        <button
+            class="btn btn-success mt-3 w-100"
+            type="submit">
+
+            Analyze with AI
+
+        </button>
+
+    </form>
+
+</div>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis Result</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold" href="/">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+CyberGen AI
+
+</a>
+
+<div>
+
+<a href="/" class="btn btn-outline-info">
+
+<i class="fa fa-upload"></i>
+
+Upload Another
+
+</a>
+
+<a href="/history" class="btn btn-info">
+
+History
+
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container mt-5">
+
+<h2 class="mb-4">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Security Dashboard
+
+</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>Total Events</h5>
+
+<h2>{{ summary.total_events }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>Failed Logins</h5>
+
+<h2>{{ summary.failed_login }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>SQL Injection</h5>
+
+<h2>{{ summary.sql_injection }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>XSS</h5>
+
+<h2>{{ summary.xss }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>Firewall Blocks</h5>
+
+<h2>{{ summary.firewall }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h5>Risk Score</h5>
+
+<h2>{{ risk_score }}/100</h2>
+
+{% if risk=="LOW" %}
+<span class="badge bg-success">{{ risk }}</span>
+{% elif risk=="MEDIUM" %}
+<span class="badge bg-warning text-dark">{{ risk }}</span>
+{% elif risk=="HIGH" %}
+<span class="badge bg-danger">{{ risk }}</span>
+{% else %}
+<span class="badge bg-dark">{{ risk }}</span>
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<div class="row">
+
+<div class="col-lg-6">
+
+<div class="chart-card">
+
+<h4>
+
+Attack Distribution
+
+</h4>
+
+<canvas id="attackChart"></canvas>
+
+</div>
+
+</div>
+
+<div class="col-lg-6">
+
+<div class="chart-card">
+
+<h4>
+
+Top Attack Types
+
+</h4>
+
+<canvas id="barChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<div class="report-card">
+
+<h3>
+
+🤖 AI Incident Report
+
+</h3>
+
+<pre style="white-space:pre-wrap;color:white;font-size:16px;">{{ ai_report }}</pre>
+
+</div>
+
+<hr class="my-5">
+
+<div class="row">
+
+    <div class="col-lg-6">
+
+        <div class="chart-card">
+
+            <h3>
+                <i class="fa-solid fa-location-dot"></i>
+                Suspicious IP Addresses
+            </h3>
+
+            <table class="table table-dark table-hover mt-3">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>IP Address</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for ip in ips %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ ip }}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="chart-card">
+
+            <h3>
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+                Incident Summary
+
+            </h3>
+
+            <table class="table table-dark mt-3">
+
+                <tr>
+
+                    <td>Filename</td>
+
+                    <td>{{ filename }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Total Events</td>
+
+                    <td>{{ summary.total_events }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Risk Score</td>
+
+                    <td>{{ risk_score }}/100</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Risk Level</td>
+
+                    <td>
+
+                        {% if risk=="LOW" %}
+                        <span class="badge bg-success">{{risk}}</span>
+
+                        {% elif risk=="MEDIUM" %}
+                        <span class="badge bg-warning text-dark">{{risk}}</span>
+
+                        {% elif risk=="HIGH" %}
+                        <span class="badge bg-danger">{{risk}}</span>
+
+                        {% else %}
+                        <span class="badge bg-dark">{{risk}}</span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<hr class="my-5">
+
+
+<div class="chart-card">
+
+<h3>
+
+<i class="fa-solid fa-list"></i>
+
+Detected Events
+
+</h3>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-striped">
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>Severity</th>
+
+<th>Attack Type</th>
+
+<th>IP Address</th>
+
+<th>Raw Log</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for event in events %}
+
+<tr>
+
+<td>{{ loop.index }}</td>
+
+<td>
+
+{% if event.severity=="Critical" %}
+
+<span class="badge bg-danger">
+
+{{event.severity}}
+
+</span>
+
+{% elif event.severity=="High" %}
+
+<span class="badge bg-warning text-dark">
+
+{{event.severity}}
+
+</span>
+
+{% elif event.severity=="Medium" %}
+
+<span class="badge bg-info">
+
+{{event.severity}}
+
+</span>
+
+{% else %}
+
+<span class="badge bg-secondary">
+
+{{event.severity}}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{event.type}}</td>
+
+<td>{{event.ip}}</td>
+
+<td>{{event.raw}}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<div class="text-center mt-5">
+
+<a
+
+href="/"
+
+class="btn btn-primary btn-lg">
+
+<i class="fa-solid fa-upload"></i>
+
+Analyze Another Log
+
+</a>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+const attackChart = document.getElementById("attackChart");
+
+new Chart(attackChart,{
+
+type:"pie",
+
+data:{
+
+labels:[
+
+"Failed Login",
+
+"SQL Injection",
+
+"XSS",
+
+"Firewall",
+
+"Port Scan",
+
+"Malware"
+
+],
+
+datasets:[{
+
+data:[
+
+{{summary.failed_login}},
+
+{{summary.sql_injection}},
+
+{{summary.xss}},
+
+{{summary.firewall}},
+
+{{summary.port_scan}},
+
+{{summary.malware}}
+
+]
+
+}]
+
+}
+
+});
+
+
+
+const barChart=document.getElementById("barChart");
+
+new Chart(barChart,{
+
+type:"bar",
+
+data:{
+
+labels:[
+
+"Failed",
+
+"SQLi",
+
+"XSS",
+
+"Firewall",
+
+"Port Scan",
+
+"Malware"
+
+],
+
+datasets:[{
+
+label:"Events",
+
+data:[
+
+{{summary.failed_login}},
+
+{{summary.sql_injection}},
+
+{{summary.xss}},
+
+{{summary.firewall}},
+
+{{summary.port_scan}},
+
+{{summary.malware}}
+
+]
+
+}]
+
+}
+
+});
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
